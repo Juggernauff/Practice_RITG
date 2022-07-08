@@ -21,20 +21,32 @@ namespace DeliveryAppClient
         private void btnGetOrdersSDEK_Click(object sender, System.EventArgs e)
         {
             List<Order> orders = APIManager.GetOrdersSDEK(user.role);
-            dgvOrders.DataSource = orders;
+            if (cbUseDTP.Checked)
+                dgvOrders.DataSource = orders.Where(r => r.DateTime > dtpFrom.Value && r.DateTime < dtpTo.Value).ToList();
+            else
+                dgvOrders.DataSource = orders;
         }
 
         private void btnGetOrdersUralTransit_Click(object sender, System.EventArgs e)
         {
             List<Order> orders = APIManager.GetOrdersUralTransit(user.role);
-            dgvOrders.DataSource = orders;
+            if (cbUseDTP.Checked)
+                dgvOrders.DataSource = orders.Where(r => r.DateTime > dtpFrom.Value && r.DateTime < dtpTo.Value).ToList();
+            else
+                dgvOrders.DataSource = orders;
         }
 
         private void btnGetAllOrders_Click(object sender, System.EventArgs e)
         {
             List<Order> ordersSDEK = APIManager.GetOrdersSDEK(user.role);
             List<Order> ordersUralTransit = APIManager.GetOrdersUralTransit(user.role);
-            dgvOrders.DataSource = ordersSDEK.Union(ordersUralTransit).ToList();
+
+            if (cbUseDTP.Checked)
+            {
+                dgvOrders.DataSource = ordersSDEK.Union(ordersUralTransit).ToList().Where(r => r.DateTime > dtpFrom.Value && r.DateTime < dtpTo.Value).ToList();
+            }
+            else
+                dgvOrders.DataSource = ordersSDEK.Union(ordersUralTransit).ToList();
         }
     }
 }
